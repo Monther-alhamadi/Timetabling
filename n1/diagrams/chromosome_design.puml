@@ -1,0 +1,18 @@
+@startuml chromosome_design
+
+' Chromosome Design for University Timetabling Problem
+
+class Chromosome {
+  genes: List<Gene>
+}
+
+class Gene {
+  course_id: str
+  assigned_timeslot: TimeSlot
+  assigned_room: Room
+  assigned_teacher: Instructor
+}
+
+Chromosome "1" -- "*" Gene : contains
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml sequence_diagram
+' Sequence Diagram reflecting the actual program flow
+
+participant "Registrar" as admin
+participant "Streamlit UI" as ui
+participant "Validator" as val
+participant "CP-SAT Scheduler" as cps
+participant "SA Optimizer" as sa
+participant "Genetic Optimizer" as ga
+participant "Exporter" as exp
+
+admin -> ui : upload(json_file) / select data
+ui -> val : validate(data)
+val --> ui : ok / errors
+ui -> cps : generate_initial_schedule()
+cps --> ui : initial_schedule
+ui -> sa : optimize(initial_schedule)
+' sa --> ui : schedule_after_sa
+' ui -> ga : optimize(schedule_after_sa)
+ga --> ui : final_schedule
+ui -> exp : export(format)
+exp --> admin : download_file
+
+@enduml

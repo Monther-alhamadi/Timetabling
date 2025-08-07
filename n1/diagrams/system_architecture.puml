@@ -1,0 +1,45 @@
+@startuml system_architecture
+
+' System Architecture Diagram for University Scheduling System
+' يوضح مكونات النظام وتفاعلها
+
+package "User Interface" {
+  [Streamlit App]
+  [Data Manager]
+  [Advanced Settings]
+  [Timetable Viewer]
+}
+
+package "Core Engine" {
+  [Scheduler Engine]
+  [CP-SAT Algorithm]
+  [Genetic Optimizer]
+  [Soft Constraints Handler]
+}
+
+package "Data Layer" {
+  [Data Storage]
+  [Sample/Test Data]
+  [Config Manager]
+}
+
+[Streamlit App] --> [Data Manager]
+[Streamlit App] --> [Advanced Settings]
+[Streamlit App] --> [Timetable Viewer]
+[Streamlit App] --> [Scheduler Engine]
+[Data Manager] --> [Scheduler Engine]
+[Advanced Settings] --> [Scheduler Engine]
+[Timetable Viewer] --> [Scheduler Engine]
+
+[Scheduler Engine] --> [CP-SAT Algorithm]
+[Scheduler Engine] --> [Genetic Optimizer]
+[Scheduler Engine] --> [Soft Constraints Handler]
+
+[Scheduler Engine] --> [Data Storage]
+[Scheduler Engine] --> [Config Manager]
+[Data Manager] --> [Data Storage]
+[Advanced Settings] --> [Config Manager]
+[Streamlit App] --> [Config Manager]
+[Streamlit App] --> [Sample/Test Data]
+
+@enduml

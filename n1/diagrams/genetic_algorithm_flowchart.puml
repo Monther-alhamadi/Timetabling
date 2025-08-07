@@ -1,0 +1,21 @@
+@startuml genetic_algorithm_flowchart
+
+start
+:Encoding (Chromosome Representation);
+:Initial Population Generation;
+:Fitness Evaluation;
+repeat
+  :Selection;
+  :Crossover;
+  :Mutation;
+  :Repair (if enabled);
+  :Fitness Evaluation;
+  :Replacement (Elitism);
+  if (Migration/Islands?) then (yes)
+    :Migration between Islands;
+  endif
+  :Update Best Solution;
+repeat while (Stopping Condition not met)
+stop
+
+@enduml

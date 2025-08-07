@@ -1,0 +1,75 @@
+@startuml schedule_model_components
+
+' Diagram: Schedule Model Components and Interactions
+
+package "Data Layer" {
+  class Room
+  class Instructor
+  class Group
+  class Course
+  class Config
+}
+
+package "Algorithm Layer" {
+  class CPSatScheduler
+  class SoftConstraintsOptimizer
+  class EnhancedGeneticOptimizer
+}
+
+package "Schedule Model" {
+  class Schedule
+  class TimeSlot
+}
+
+package "Analytics & Export" {
+  class ScheduleAnalytics
+  class Exporter
+}
+
+Room --> Schedule : assigned_room
+Instructor --> Schedule : assigned_instructor
+Group --> Schedule : assigned_group
+Course --> Schedule : assigned_course
+Config --> CPSatScheduler
+Config --> SoftConstraintsOptimizer
+Config --> EnhancedGeneticOptimizer
+CPSatScheduler --> Schedule : generate
+SoftConstraintsOptimizer --> Schedule : optimize
+EnhancedGeneticOptimizer --> Schedule : evolve
+Schedule --> ScheduleAnalytics : analyzed by
+Schedule --> Exporter : exported as
+
+note right of EnhancedGeneticOptimizer
+  تصميم الكروموسوم (Chromosome Design):
+  كل كروموسوم يمثل جدولاً كاملاً، وكل جين يمثل محاضرة مجدولة.
+
+  كروموسوم = [جين1, جين2, ..., جينN]
+  حيث:
+    جين = (Course, TimeSlot, Room, Instructor)
+
+  مثال توضيحي:
+  +------------------- كروموسوم (جدول كامل) -------------------+
+  | [جين1] | [جين2] | ... | [جينN] |
+  +------------------------------------------------------------+
+
+  جين1:
+    - المادة: CS101
+    - الفترة الزمنية: الأحد 10:00-11:30
+    - القاعة: R101
+    - المدرس: I001
+end note
+
+note right of SoftConstraintsOptimizer
+  دالة اللياقة (Fitness Function):
+  Fitness = ∑(wᵢ × sᵢ) - P_hc
+
+  حيث:
+    wᵢ : وزن القيد المرن رقم i (يحدده المستخدم)
+    sᵢ : درجة الرضا عن القيد المرن i (قيمة غير سالبة)
+    P_hc: عقوبة القيود الصارمة (قيمة موجبة كبيرة إذا حدث خرق)
+
+  - كلما زادت قيمة الدالة كان الحل أفضل.
+  - الهدف هو تقليل العقوبات وزيادة الرضا عن القيود المرنة.
+end note
+
+@enduml

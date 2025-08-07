@@ -1,0 +1,14 @@
+{
+  "rooms": [
+    {
+      "id": "ش",
+      "name": "ش",
+      "type": "س",
+      "capacity": 1,
+      "facilities": "س"
+    }
+  ],
+  "instructors": [],
+  "groups": [],
+  "courses": []
+}

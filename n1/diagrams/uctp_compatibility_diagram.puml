@@ -1,0 +1,50 @@
+@startuml uctp_compatibility_diagram
+
+' UCTP Entities and Relations Diagram (English only)
+
+entity "Course" as Course
+entity "Room" as Room
+entity "Lecturer" as Lecturer
+entity "TimeSlot" as TimeSlot
+entity "Group" as Group
+
+rectangle "Rules" as Rules #lightyellow
+rectangle "Tools" as Tools #lightblue
+cloud "Hard Constraints" as HardC #red
+cloud "Soft Constraints" as SoftC #green
+folder "Timetable" as Timetable
+
+' --- Relations ---
+Course -- Room : "assigned to"
+Course -- Lecturer : "taught by"
+Course -- TimeSlot : "scheduled at"
+Course -- Group : "for group"
+
+Room ..> HardC : "no overlap"
+Lecturer ..> HardC : "no overlap"
+Group ..> HardC : "no overlap"
+Course ..> HardC : "mandatory rules"
+Course ..> SoftC : "preferences"
+Room ..> SoftC : "preferences"
+Lecturer ..> SoftC : "preferences"
+Group ..> SoftC : "preferences"
+
+Rules ..> HardC : "define"
+Rules ..> SoftC : "define"
+Tools ..> Rules : "apply"
+Tools ..> Course
+Tools ..> Room
+Tools ..> Lecturer
+Tools ..> TimeSlot
+Tools ..> Group
+Tools ..> HardC : "enforce"
+Tools ..> SoftC : "optimize"
+Tools --> Timetable : "produce"
+
+Timetable ..> Course
+Timetable ..> Room
+Timetable ..> Lecturer
+Timetable ..> TimeSlot
+Timetable ..> Group
+
+@enduml

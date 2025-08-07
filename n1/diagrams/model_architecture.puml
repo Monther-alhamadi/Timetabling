@@ -1,0 +1,98 @@
+@startuml model_architecture
+
+' Model Architecture (UML-like) for the University Scheduling System
+' يمكنك رسم هذا المخطط باستخدام أدوات رسم UML في VS Code مثل PlantUML
+
+class Config {
+    +List<Room> rooms
+    +List<Instructor> instructors
+    +List<Group> groups
+    +List<Course> courses
+    +List<DayOfWeek> working_days
+    +time daily_start_time
+    +time daily_end_time
+    ' ...
+}
+class Room {
+    +str id
+    +str name
+    +str type
+    +int capacity
+    +List<str> facilities
+    +Dict<int, List<TimeSlot>> available_slots
+}
+class Instructor {
+    +str id
+    +str name
+    +List<str> expertise
+    +List<TimeSlot> availability
+    +int max_teaching_hours
+    +List<int> preferred_days
+    +List<str> preferred_groups
+    +List<TimeSlot> available_slots
+    +List<TimeSlot> preferred_slots
+}
+class Group {
+    +str id
+    +str major
+    +int level
+    +int student_count
+    +List<str> enrolled_courses
+    +List<TimeSlot> schedule
+    +int subgroup_count
+}
+class Course {
+    +str id
+    +str name
+    +str course_type
+    +int duration
+    +str instructor_id
+    +str group_id
+    +List<str> required_facilities
+    +bool can_merge
+    +List<str> merge_with
+    +List<TimeSlot> preferred_times
+    +int subgroup_count
+}
+class Schedule {
+    +str course_id
+    +str room_id
+    +str instructor_id
+    +TimeSlot time_slot
+    +str group_id
+    +Course assigned_course
+    +Room assigned_room
+    +Instructor assigned_instructor
+    +Group assigned_group
+    +str status
+    +int penalty_score
+}
+class TimeSlot {
+    +int day
+    +time start_time
+    +time end_time
+}
+enum DayOfWeek {
+    SATURDAY
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+}
+
+Config --> Room
+Config --> Instructor
+Config --> Group
+Config --> Course
+Schedule --> Course
+Schedule --> Room
+Schedule --> Instructor
+Schedule --> Group
+Course --> TimeSlot
+Instructor --> TimeSlot
+Group --> TimeSlot
+Schedule --> TimeSlot
+
+@enduml

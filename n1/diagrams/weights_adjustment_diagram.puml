@@ -1,0 +1,49 @@
+@startuml weights_adjustment_diagram
+left to right direction
+skinparam rectangle {
+  BackgroundColor #f5f9ff
+  BorderColor #1e88e5
+  FontName 'Segoe UI'
+}
+skinparam linetype ortho
+
+package "واجهة ضبط الأوزان" {
+  rectangle "القيود الأساسية" as Basic {
+    [تعارض القاعات\n(room_conflict)]
+    [تعارض المدرسين\n(instructor_conflict)]
+    [تعارض المجموعات\n(group_conflict)]
+  }
+  rectangle "القيود الزمنية" as Time {
+    [تفضيلات الوقت\n(time_preference)]
+    [فترات الراحة\n(min_break)]
+    [الحد الأقصى للساعات اليومية\n(max_daily_hours)]
+  }
+  rectangle "القيود المتقدمة" as Advanced {
+    [توافق المرافق\n(facility_match)]
+    [تفضيلات المدرسين\n(instructor_preference)]
+    [استخدام القاعات\n(room_utilization)]
+  }
+}
+
+' ربط كل Slider بالمفتاح البرمجي
+[تعارض القاعات\n(room_conflict)] --> "penalty_weights['room_conflict']"
+[تعارض المدرسين\n(instructor_conflict)] --> "penalty_weights['instructor_conflict']"
+[تعارض المجموعات\n(group_conflict)] --> "penalty_weights['group_conflict']"
+[تفضيلات الوقت\n(time_preference)] --> "penalty_weights['time_preference']"
+[فترات الراحة\n(min_break)] --> "config.min_break_between_classes"
+[الحد الأقصى للساعات اليومية\n(max_daily_hours)] --> "config.max_daily_hours"
+[توافق المرافق\n(facility_match)] --> "penalty_weights['facility_mismatch']"
+[تفضيلات المدرسين\n(instructor_preference)] --> "penalty_weights['instructor_preference']"
+[استخدام القاعات\n(room_utilization)] --> "penalty_weights['balance_room_usage']"
+
+' توضيح التأثير البرمجي
+note right of Basic
+كل متغير يؤثر على حساب العقوبة في خوارزمية الجدولة
+end note
+note right of Time
+تؤثر على توزيع المحاضرات زمنياً
+end note
+note right of Advanced
+تحسن جودة الجدول وتلبي التفضيلات
+end note
+@enduml

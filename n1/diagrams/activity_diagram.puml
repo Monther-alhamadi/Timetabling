@@ -1,0 +1,12 @@
+@startuml activity_diagram
+' Activity Diagram for Smart Scheduling System (actual program flow)
+start
+:Upload JSON File / Use Sample / Manual Entry\n(step_data_selection);
+:Preview & Validate Data\n(step_data_preview);
+:Adjust Constraint Weights / Advanced Settings\n(step_weights_adjustment / advanced_settings_main);
+:Generate Initial Schedule (CP-SAT)\n(CPSatScheduler.generate_schedule);
+:Optimize with Genetic Algorithm\n(EnhancedGeneticOptimizer.evolve);
+:Optional: Local Optimization (SA);
+:View / Export Timetable\n(timetable_viewer_main);
+stop
+@enduml

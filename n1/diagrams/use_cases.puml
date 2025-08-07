@@ -1,0 +1,52 @@
+@startuml use_cases
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Registrar" as admin
+
+
+rectangle "Smart Scheduling System" {
+  usecase "Upload JSON File" as uc1 <<page>>
+  usecase "Validate Data" as uc2 <<page>>
+  usecase "Generate Schedule" as uc3 <<page>>
+  usecase "View Schedule" as uc4 <<page>>
+  usecase "Adjust Constraint Weights" as uc5 <<page>>
+  usecase "Export Results" as uc6 <<function>>
+  usecase "View My Schedule" as uc7 <<function>>
+}
+
+note right of uc1
+  Linked to: Step 1 - Data Selection (Upload JSON)
+  Streamlit: step_data_selection()
+end note
+note right of uc2
+  Linked to: Step 2 - Data Preview & Validation
+  Streamlit: step_data_preview()
+end note
+note right of uc3
+  Linked to: Step 4 - Scheduling & Results
+  Streamlit: step_scheduling()
+end note
+note right of uc4
+  Linked to: Timetable Viewer Page
+  Streamlit: timetable_viewer_main()
+end note
+note right of uc5
+  Linked to: Step 3 - Weights Adjustment / Advanced Settings
+  Streamlit: step_weights_adjustment(), advanced_settings_main()
+end note
+note right of uc6
+  Linked to: Export buttons in Timetable Viewer
+end note
+note right of uc7
+  Linked to: Filter in Timetable Viewer (by user)
+end note
+
+admin --> uc1
+admin --> uc2
+admin --> uc3
+admin --> uc5
+admin --> uc6
+admin --> uc4
+admin --> uc7
+@enduml

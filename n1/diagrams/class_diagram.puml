@@ -1,0 +1,58 @@
+@startuml class_diagram
+' Class Diagram reflecting the main data model
+
+class Course {
+  +id: str
+  +name: str
+  +duration: int
+  +type: str
+  +instructor_id: str
+  +group_id: str
+}
+
+class Room {
+  +id: str
+  +name: str
+  +type: str
+  +capacity: int
+  +facilities: List[str]
+}
+
+class Instructor {
+  +id: str
+  +name: str
+  +expertise: List[str]
+  +max_teaching_hours: int
+  +preferred_days: List[int]
+}
+
+class Group {
+  +id: str
+  +major: str
+  +level: int
+  +student_count: int
+}
+
+class Schedule {
+  +course_id: str
+  +room_id: str
+  +instructor_id: str
+  +group_id: str
+  +timeslot: TimeSlot
+}
+
+class TimeSlot {
+  +day: int
+  +start_time: time
+  +end_time: time
+}
+
+Course --> Instructor : instructor_id
+Course --> Group     : group_id
+Schedule --> Course  : course_id
+Schedule --> Room    : room_id
+Schedule --> Instructor : instructor_id
+Schedule --> Group   : group_id
+Schedule --> TimeSlot : timeslot
+
+@enduml

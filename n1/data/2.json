@@ -1,0 +1,154 @@
+{
+  "rooms": [
+    {"id": "R1", "name": "القاعة الكبرى", "type": "نظرية", "capacity": 60, "facilities": ["projector"]},
+    {"id": "R2", "name": "القاعة الصغرى", "type": "نظرية", "capacity": 30, "facilities": ["projector"]},
+    {"id": "R3", "name": "مختبر الحاسوب 1", "type": "عملي", "capacity": 20, "facilities": ["computers"]},
+    {"id": "R4", "name": "مختبر الحاسوب 2", "type": "عملي", "capacity": 20, "facilities": ["computers"]},
+    {"id": "R5", "name": "المختبر العام", "type": "عملي", "capacity": 30, "facilities": ["lab_equipment"]}
+  ],
+  "instructors": [
+    {
+      "id": "I1", 
+      "name": "د. أحمد", 
+      "expertise": ["نظرية"],
+      "preferred_days": [1, 2, 3, 4, 5],
+      "max_teaching_hours": 20
+    },
+    {
+      "id": "I2", 
+      "name": "د. سارة", 
+      "expertise": ["نظرية", "عملي"],
+      "preferred_days": [1, 2, 3, 4, 5],
+      "max_teaching_hours": 25
+    },
+    {
+      "id": "I3", 
+      "name": "د. علي", 
+      "expertise": ["عملي"],
+      "preferred_days": [1, 2, 3, 4, 5],
+      "max_teaching_hours": 30
+    }
+  ],
+  "groups": [
+    {
+      "id": "G1", 
+      "major": "علوم الحاسب", 
+      "student_count": 90,
+      "enrolled_courses": ["C1", "C2", "C3", "C4", "C5", "C6"],
+      "level": 1
+    },
+    {
+      "id": "G2", 
+      "major": "الهندسة", 
+      "student_count": 60,
+      "enrolled_courses": ["C7", "C8", "C9", "C10"],
+      "level": 1
+    }
+  ],
+  "courses": [
+    {
+      "id": "C1",
+      "name": "الرياضيات المتقدمة",
+      "course_type": "نظرية",
+      "duration": 180,
+      "instructor_id": "I1",
+      "group_id": "G1",
+      "required_facilities": ["projector"],
+      "can_merge": false
+    },
+    {
+      "id": "C2",
+      "name": "الفيزياء الكمومية",
+      "course_type": "نظرية",
+      "duration": 120,
+      "instructor_id": "I1",
+      "group_id": "G1",
+      "required_facilities": ["projector"],
+      "can_merge": true,
+      "merge_with": ["C3"]
+    },
+    {
+      "id": "C3",
+      "name": "ميكانيكا الكم",
+      "course_type": "نظرية",
+      "duration": 120,
+      "instructor_id": "I2",
+      "group_id": "G1",
+      "required_facilities": ["projector"],
+      "can_merge": true,
+      "merge_with": ["C2"]
+    },
+    {
+      "id": "C4",
+      "name": "البرمجة المتوازية",
+      "course_type": "عملي",
+      "duration": 180,
+      "instructor_id": "I3",
+      "group_id": "G1",
+      "required_facilities": ["computers"]
+    },
+    {
+      "id": "C5",
+      "name": "تعلم الآلة المتقدم",
+      "course_type": "عملي",
+      "duration": 180,
+      "instructor_id": "I3",
+      "group_id": "G1",
+      "required_facilities": ["computers"]
+    },
+    {
+      "id": "C6",
+      "name": "الشبكات العصبية",
+      "course_type": "عملي",
+      "duration": 120,
+      "instructor_id": "I2",
+      "group_id": "G1",
+      "required_facilities": ["computers"]
+    },
+    {
+      "id": "C7",
+      "name": "هندسة المواد المتقدمة",
+      "course_type": "نظرية",
+      "duration": 180,
+      "instructor_id": "I1",
+      "group_id": "G2",
+      "required_facilities": ["projector"],
+      "can_merge": false
+    },
+    {
+      "id": "C8",
+      "name": "ديناميكا الموائع",
+      "course_type": "عملي",
+      "duration": 240,
+      "instructor_id": "I3",
+      "group_id": "G2",
+      "required_facilities": ["lab_equipment"]
+    },
+    {
+      "id": "C9",
+      "name": "التحليل العددي",
+      "course_type": "نظرية",
+      "duration": 120,
+      "instructor_id": "I2",
+      "group_id": "G2",
+      "required_facilities": ["projector"],
+      "can_merge": true,
+      "merge_with": ["C10"]
+    },
+    {
+      "id": "C10",
+      "name": "خوارزميات الحساب العلمي",
+      "course_type": "عملي",
+      "duration": 120,
+      "instructor_id": "I3",
+      "group_id": "G2",
+      "required_facilities": ["computers"],
+      "can_merge": true,
+      "merge_with": ["C9"]
+    }
+  ],
+  "working_days": [1, 2, 3, 4, 5],
+  "daily_start_time": "08:00",
+  "daily_end_time": "18:00",
+  "min_break_between_classes": 10
+}
