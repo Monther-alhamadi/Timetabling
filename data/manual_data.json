@@ -1,0 +1,1059 @@
+
+
+# import tkinter as tk
+# from tkinter import ttk, messagebox, filedialog
+# import random
+# import time
+# import math
+
+# class UniversityScheduler:
+#     def __init__(self, root):
+#         self.root = root
+#         self.root.title("نظام جدولة المحاضرات الجامعية")
+#         self.root.geometry("1200x750")
+#         self.root.resizable(True, True)
+#         self.root.configure(bg="#0f172a")
+        
+#         # إضافة تأثيرات متحركة للخلفية أولاً
+#         self.canvas = tk.Canvas(self.root, bg="#0f172a", highlightthickness=0)
+#         self.canvas.place(x=0, y=0, relwidth=1, relheight=1)
+#         self.create_background_animation()
+        
+#         # إنشاء أسلوب التطبيق بعد الخلفية
+#         self.style = ttk.Style()
+#         self.style.theme_use("clam")
+        
+#         # تخصيص الأنماط مع تحسينات التصميم
+#         self.style.configure("TFrame", background="#0f172a")
+#         self.style.configure("Header.TFrame", background="linear-gradient(90deg, #1e3a8a, #0ea5e9)")
+#         self.style.configure("Title.TLabel", background="transparent", foreground="white", 
+#                             font=("Cairo", 24, "bold"))
+#         self.style.configure("Subtitle.TLabel", background="transparent", foreground="#cbd5e1", 
+#                             font=("Cairo", 14))
+#         self.style.configure("Step.TLabel", background="transparent", foreground="#0ea5e9", 
+#                             font=("Cairo", 14, "bold"))
+#         self.style.configure("StepNumber.TLabel", background="#0ea5e9", foreground="white", 
+#                             font=("Cairo", 14, "bold"), width=3, anchor="center")
+#         self.style.configure("Card.TFrame", background="#1e293b", relief="flat", borderwidth=0)
+#         self.style.configure("CardTitle.TLabel", background="transparent", foreground="#0ea5e9", 
+#                             font=("Cairo", 14, "bold"))
+#         self.style.configure("CardIcon.TLabel", background="transparent", foreground="#0ea5e9", 
+#                             font=("Cairo", 22))
+#         self.style.configure("CardContent.TLabel", background="transparent", foreground="#cbd5e1", 
+#                             font=("Cairo", 12), wraplength=250)
+#         self.style.configure("Primary.TButton", background="linear-gradient(90deg, #1e3a8a, #0ea5e9)", 
+#                             foreground="white", font=("Cairo", 14, "bold"), borderwidth=0, 
+#                             relief="flat", padding=10)
+#         self.style.map("Primary.TButton", background=[("active", "linear-gradient(90deg, #1e40af, #0284c7)")])
+#         self.style.configure("Secondary.TButton", background="#334155", foreground="white", 
+#                             font=("Cairo", 14, "bold"), borderwidth=0, relief="flat", padding=10)
+#         self.style.map("Secondary.TButton", background=[("active", "#475569")])
+#         self.style.configure("Success.TButton", background="linear-gradient(90deg, #047857, #10b981)", 
+#                             foreground="white", font=("Cairo", 14, "bold"), borderwidth=0, 
+#                             relief="flat", padding=10)
+#         self.style.map("Success.TButton", background=[("active", "linear-gradient(90deg, #065f46, #059669)")])
+#         self.style.configure("Warning.TButton", background="linear-gradient(90deg, #b45309, #f59e0b)", 
+#                             foreground="white", font=("Cairo", 14, "bold"), borderwidth=0, 
+#                             relief="flat", padding=10)
+#         self.style.map("Warning.TButton", background=[("active", "linear-gradient(90deg, #9a3412, #eab308)")])
+#         self.style.configure("SelectedCard.TFrame", background="#334155", relief="flat", borderwidth=0)
+#         self.style.configure("PulseSidebarStep.TButton", background="#0ea5e9", foreground="white", 
+#                             font=("Cairo", 15, "bold"), borderwidth=0, anchor="w", padding=14)
+        
+#         # بيانات التطبيق
+#         self.current_step = 1
+#         self.selected_source = None
+#         self.algorithm_settings = {
+#             "time-conflict": 10,
+#             "load-balance": 8,
+#             "time-preference": 6,
+#             "gap-minimization": 7,
+#             "room-capacity": 5,
+#             "equipment-match": 9,
+#             "room-proximity": 4
+#         }
+        
+#         # إنشاء شريط الحالة
+#         self.status_var = tk.StringVar(value="جاهز للبدء")
+#         self.status_bar = ttk.Label(root, textvariable=self.status_var, relief="sunken", 
+#                                    anchor="center", background="#1e293b", foreground="#0ea5e9",
+#                                    font=("Cairo", 11))
+#         self.status_bar.pack(side="bottom", fill="x", padx=0, pady=0)
+
+#         # إنشاء واجهة المستخدم
+#         self.create_main_layout()
+#         self.show_step(1)
+    
+#     def create_background_animation(self):
+#         # إنشاء جسيمات متحركة للخلفية
+#         self.particles = []
+#         width = self.root.winfo_width()
+#         height = self.root.winfo_height()
+        
+#         # إنشاء 30 جسيماً
+#         for _ in range(30):
+#             x = random.randint(0, width)
+#             y = random.randint(0, height)
+#             size = random.randint(1, 3)
+#             speed = random.uniform(0.5, 2)
+#             color = random.choice(["#1e3a8a", "#0ea5e9", "#1e40af", "#0284c7"])
+#             particle = self.canvas.create_oval(
+#                 x, y, x+size, y+size, 
+#                 fill=color, 
+#                 outline=""
+#             )
+#             self.particles.append({
+#                 "id": particle,
+#                 "x": x,
+#                 "y": y,
+#                 "size": size,
+#                 "speed": speed,
+#                 "direction": random.uniform(0, 2 * math.pi)
+#             })
+        
+#         self.animate_particles()
+    
+#     def animate_particles(self):
+#         width = self.root.winfo_width()
+#         height = self.root.winfo_height()
+        
+#         for particle in self.particles:
+#             dx = math.cos(particle["direction"]) * particle["speed"]
+#             dy = math.sin(particle["direction"]) * particle["speed"]
+            
+#             new_x = particle["x"] + dx
+#             new_y = particle["y"] + dy
+            
+#             # إعادة الجسيم عند تجاوز الحدود
+#             if new_x < 0 or new_x > width:
+#                 particle["direction"] = math.pi - particle["direction"]
+#                 new_x = max(0, min(width, new_x))
+            
+#             if new_y < 0 or new_y > height:
+#                 particle["direction"] = -particle["direction"]
+#                 new_y = max(0, min(height, new_y))
+            
+#             # تحديث موضع الجسيم
+#             self.canvas.move(particle["id"], dx, dy)
+#             particle["x"] = new_x
+#             particle["y"] = new_y
+        
+#         self.root.after(30, self.animate_particles)
+    
+#     def create_main_layout(self):
+#         # إطار رئيسي أفقي: شريط جانبي + محتوى
+#         self.main_frame = ttk.Frame(self.root, style="TFrame")
+#         self.main_frame.pack(fill="both", expand=True, padx=15, pady=15)
+
+#         # شريط جانبي للتنقل بين الخطوات
+#         self.sidebar = ttk.Frame(self.main_frame, style="TFrame", width=200)
+#         self.sidebar.pack(side="left", fill="y", padx=(0, 10), pady=0)
+#         self.sidebar.pack_propagate(False)
+
+#         # محتوى رئيسي
+#         self.content_area = ttk.Frame(self.main_frame, style="TFrame")
+#         self.content_area.pack(side="left", fill="both", expand=True)
+
+#         # رأس التطبيق
+#         self.create_header(self.content_area)
+#         self.create_steps_sidebar()
+#         self.create_content_area(self.content_area)
+
+#     def create_header(self, parent):
+#         self.header_frame = ttk.Frame(parent, style="Header.TFrame")
+#         self.header_frame.pack(fill="x", padx=0, pady=0)
+        
+#         # إضافة تأثير تدرج للرأس
+#         header_canvas = tk.Canvas(self.header_frame, bg="#0f172a", highlightthickness=0, height=120)
+#         header_canvas.pack(fill="both", expand=True)
+        
+#         # رسم تدرج لوني
+#         header_canvas.create_rectangle(0, 0, self.root.winfo_width(), 120, 
+#                                       fill="", outline="", 
+#                                       tags=("gradient",))
+        
+#         # تحديث التدرج عند تغيير الحجم
+#         def update_gradient(event=None):
+#             w = header_canvas.winfo_width()
+#             for i in range(120):
+#                 r = int(14 + (i * (30-14)/120))
+#                 g = int(37 + (i * (166-37)/120))
+#                 b = int(138 + (i * (234-138)/120))
+#                 color = f'#{r:02x}{g:02x}{b:02x}'
+#                 header_canvas.create_line(0, i, w, i, fill=color, tags=("gradient",))
+#             header_canvas.delete("old_gradient")
+#             header_canvas.itemconfig("gradient", tags=("old_gradient",))
+        
+#         header_canvas.bind("<Configure>", update_gradient)
+        
+#         # العنوان والعنوان الفرعي
+#         title_frame = ttk.Frame(header_canvas, style="Header.TFrame")
+#         title_frame.place(relx=0.5, rely=0.5, anchor="center")
+        
+#         self.title_label = ttk.Label(
+#             title_frame,
+#             text="نظام جدولة المحاضرات الجامعية",
+#             style="Title.TLabel"
+#         )
+#         self.title_label.pack(pady=5)
+        
+#         self.subtitle_label = ttk.Label(
+#             title_frame,
+#             text="الخطوة 1: تحديد مصدر البيانات",
+#             style="Subtitle.TLabel"
+#         )
+#         self.subtitle_label.pack(pady=(0, 10))
+
+#     def create_steps_sidebar(self):
+#         # شريط جانبي للخطوات مع أيقونات
+#         self.sidebar_steps = []
+#         step_infos = [
+#             ("تحديد المصدر", "📁"),
+#             ("معاينة البيانات", "👁️"),
+#             ("إعدادات الجدولة", "⚙️"),
+#             ("الجدول النهائي", "📅")
+#         ]
+        
+#         # إطار داخلي للشريط الجانبي
+#         inner_sidebar = ttk.Frame(self.sidebar, style="Card.TFrame")
+#         inner_sidebar.pack(fill="both", expand=True, padx=5, pady=5)
+        
+#         # إضافة ظل للشريط الجانبي
+#         self.add_shadow(inner_sidebar, color="#0ea5e9", offset=5)
+        
+#         for i, (name, icon) in enumerate(step_infos, start=1):
+#             btn_frame = ttk.Frame(inner_sidebar, style="TFrame")
+#             btn_frame.pack(fill="x", padx=10, pady=8)
+            
+#             # إضافة تأثيرات للأزرار
+#             btn = ttk.Button(
+#                 btn_frame,
+#                 text=f"   {icon} {name}",
+#                 style="SidebarStep.TButton",
+#                 command=lambda s=i: self.show_step(s)
+#             )
+#             btn.pack(fill="x", padx=0, pady=0)
+            
+#             # إضافة ظل عند المرور
+#             btn.bind("<Enter>", lambda e, b=btn: self.glow_button(b, True))
+#             btn.bind("<Leave>", lambda e, b=btn: self.glow_button(b, False))
+            
+#             self.sidebar_steps.append(btn)
+
+#     def create_content_area(self, parent):
+#         # منطقة المحتوى الرئيسية داخل إطار المحتوى الرئيسي
+#         self.content_frame = ttk.Frame(parent, style="TFrame")
+#         self.content_frame.pack(fill="both", expand=True, padx=0, pady=10)
+#         self.step_frames = []
+#         for i in range(1, 5):
+#             frame = ttk.Frame(self.content_frame, style="TFrame")
+#             self.step_frames.append(frame)
+#             self.create_step_content(i, frame)
+    
+#     def create_step_content(self, step, frame):
+#         if step == 1:
+#             self.create_step1(frame)
+#         elif step == 2:
+#             self.create_step2(frame)
+#         elif step == 3:
+#             self.create_step3(frame)
+#         elif step == 4:
+#             self.create_step4(frame)
+    
+#     def create_step1(self, frame):
+#         # محتوى الخطوة 1: تحديد مصدر البيانات
+#         instruction = ttk.Label(
+#             frame, 
+#             text="الرجاء اختيار مصدر البيانات لجدولة المحاضرات", 
+#             style="Step.TLabel", 
+#             font=("Cairo", 15)
+#         )
+#         instruction.pack(pady=20)
+        
+#         cards_frame = ttk.Frame(frame, style="TFrame")
+#         cards_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+#         # البطاقات الثلاث
+#         sources = [
+#             {"title": "رفع ملف", "icon": "📁", "desc": "رفع ملف Excel أو CSV يحتوي على بيانات المحاضرات والقاعات والمدرسين"},
+#             {"title": "بيانات تجريبية", "icon": "🎯", "desc": "استخدام بيانات تجريبية جاهزة لتجربة النظام بسرعة"},
+#             {"title": "إدخال يدوي", "icon": "✏️", "desc": "إدخال البيانات يدوياً باستخدام واجهة سهلة ومرنة"}
+#         ]
+        
+#         self.source_cards = []
+#         for i, source in enumerate(sources):
+#             card_frame = ttk.Frame(cards_frame, style="Card.TFrame", width=300, height=250)
+#             card_frame.grid(row=0, column=i, padx=15, pady=15, sticky="nsew")
+#             card_frame.grid_propagate(False)
+            
+#             # إضافة ظل للبطاقة
+#             self.add_shadow(card_frame, color="#0ea5e9", offset=8)
+            
+#             # إضافة تأثيرات للمرور
+#             card_frame.bind("<Enter>", lambda e, c=card_frame: self.animate_card_hover(c, True))
+#             card_frame.bind("<Leave>", lambda e, c=card_frame: self.animate_card_hover(c, False))
+            
+#             # إطار داخلي للبطاقة
+#             inner_frame = ttk.Frame(card_frame, style="Card.TFrame")
+#             inner_frame.pack(fill="both", expand=True, padx=15, pady=15)
+            
+#             # عنوان البطاقة
+#             title_frame = ttk.Frame(inner_frame, style="CardTitle.TFrame")
+#             title_frame.pack(fill="x", pady=(10, 15))
+            
+#             icon = ttk.Label(title_frame, text=source["icon"], style="CardIcon.TLabel")
+#             icon.pack(side="right", padx=(10, 0))
+            
+#             title = ttk.Label(title_frame, text=source["title"], style="CardTitle.TLabel")
+#             title.pack(side="right", padx=10)
+            
+#             # محتوى البطاقة
+#             content = ttk.Label(
+#                 inner_frame, 
+#                 text=source["desc"], 
+#                 style="CardContent.TLabel", 
+#                 justify="right"
+#             )
+#             content.pack(padx=10, pady=10, fill="both", expand=True)
+            
+#             # زر مع أيقونة
+#             btn = ttk.Button(
+#                 inner_frame, 
+#                 text=f"✅ اختيار", 
+#                 style="Primary.TButton", 
+#                 command=lambda s=i: self.select_source(s)
+#             )
+#             btn.pack(pady=15, padx=20, fill="x")
+            
+#             # إضافة تأثيرات للزر
+#             btn.bind("<Enter>", lambda e, b=btn: self.glow_button(b, True))
+#             btn.bind("<Leave>", lambda e, b=btn: self.glow_button(b, False))
+            
+#             self.source_cards.append(card_frame)
+
+#     def add_shadow(self, widget, color="#0ea5e9", offset=5):
+#         # إضافة ظل للعنصر
+#         shadow = tk.Frame(widget.master, bg=color)
+#         shadow.place(in_=widget, x=offset, y=offset, relwidth=1, relheight=1)
+#         shadow.lower(widget)
+#         return shadow
+
+#     def animate_card_hover(self, card, hover):
+#         # تأثير بصري عند المرور على البطاقة
+#         if hover:
+#             card.configure(style="SelectedCard.TFrame")
+#             self.glow_card(card, True)
+#             self.raise_with_shadow(card)
+#         else:
+#             card.configure(style="Card.TFrame")
+#             self.glow_card(card, False)
+#             if self.selected_source != self.source_cards.index(card):
+#                 self.lower_with_shadow(card)
+
+#     def raise_with_shadow(self, card):
+#         # رفع البطاقة مع ظلها
+#         shadow = card.master.winfo_children()[0]
+#         shadow.lift(card)
+#         card.lift()
+
+#     def lower_with_shadow(self, card):
+#         # خفض البطاقة مع ظلها
+#         shadow = card.master.winfo_children()[0]
+#         shadow.lower()
+#         card.lower()
+
+#     def glow_card(self, card, enable):
+#         # تأثير توهج خفيف حول البطاقة
+#         if enable:
+#             for widget in card.winfo_children():
+#                 if isinstance(widget, ttk.Frame):
+#                     widget.configure(style="SelectedCard.TFrame")
+#         else:
+#             for widget in card.winfo_children():
+#                 if isinstance(widget, ttk.Frame):
+#                     widget.configure(style="Card.TFrame")
+
+#     def glow_button(self, button, enable):
+#         # تأثير توهج للأزرار
+#         if enable:
+#             button.state(['active'])
+#         else:
+#             button.state(['!active'])
+
+#     def fade_in(self, steps=10, delay=20):
+#         """تطبيق تأثير التدرج الشفاف على النافذة الرئيسية"""
+#         self.root.attributes("-alpha", 0.0)
+#         for i in range(steps):
+#             alpha = (i + 1) / steps
+#             self.root.update()
+#             self.root.attributes("-alpha", alpha)
+#             time.sleep(delay/1000)
+#         self.root.attributes("-alpha", 1.0)
+
+#     def show_step(self, step):
+#         self.current_step = step
+#         self.subtitle_label.config(text=f"الخطوة {step}: {self.get_step_name(step)}")
+        
+#         # تحديث مظهر أزرار الشريط الجانبي
+#         for i, btn in enumerate(self.sidebar_steps, start=1):
+#             if i == step:
+#                 btn.configure(style="SidebarStepActive.TButton")
+#                 self.pulse_button(btn)
+#             elif i < step:
+#                 btn.configure(style="SidebarStepDone.TButton")
+#             else:
+#                 btn.configure(style="SidebarStep.TButton")
+        
+#         # إخفاء جميع الخطوات وإظهار الخطوة الحالية
+#         for frame in self.step_frames:
+#             frame.pack_forget()
+        
+#         self.step_frames[step-1].pack(fill="both", expand=True)
+#         self.status_var.set(f"الخطوة الحالية: {self.get_step_name(step)}")
+        
+#         # حركة Fade للنافذة الرئيسية
+#         self.fade_in()
+        
+#         # حركة اهتزاز خفيفة للبطاقات عند الانتقال
+#         if step == 1:
+#             for card in self.source_cards:
+#                 self.shake_card(card)
+
+#     def pulse_button(self, btn, pulses=8, delay=60):
+#         # تأثير نبض عبر تبديل الـ style فقط
+#         def pulse(i=0):
+#             if i < pulses:
+#                 if i % 2 == 0:
+#                     btn.configure(style="PulseSidebarStep.TButton")
+#                 else:
+#                     btn.configure(style="SidebarStepActive.TButton")
+#                 btn.after(delay, lambda: pulse(i+1))
+#             else:
+#                 btn.configure(style="SidebarStepActive.TButton")
+#         pulse()
+    
+#     def create_step2(self, frame):
+#         # محتوى الخطوة 2: معاينة البيانات
+#         instruction = ttk.Label(
+#             frame, 
+#             text="معاينة البيانات والتحقق من صحتها", 
+#             style="Step.TLabel", 
+#             font=("Cairo", 15)
+#         )
+#         instruction.pack(pady=20)
+        
+#         # إحصائيات سريعة
+#         stats_frame = ttk.Frame(frame, style="TFrame")
+#         stats_frame.pack(fill="x", padx=10, pady=10)
+        
+#         stats_data = [
+#             {"value": "24", "label": "المواد الدراسية", "icon": "📚"},
+#             {"value": "12", "label": "أعضاء هيئة التدريس", "icon": "👨‍🏫"},
+#             {"value": "8", "label": "القاعات", "icon": "🏢"},
+#             {"value": "156", "label": "إجمالي الساعات", "icon": "⏰"}
+#         ]
+        
+#         for i, stat in enumerate(stats_data):
+#             card = ttk.Frame(stats_frame, style="Card.TFrame", width=150, height=120)
+#             card.grid(row=0, column=i, padx=10, pady=10, sticky="nsew")
+#             stats_frame.columnconfigure(i, weight=1)
+            
+#             # إضافة ظل للبطاقة
+#             self.add_shadow(card, color="#0ea5e9", offset=5)
+            
+#             inner_frame = ttk.Frame(card, style="Card.TFrame")
+#             inner_frame.pack(fill="both", expand=True, padx=10, pady=10)
+            
+#         icon = ttk.Label(inner_frame, text=stat["icon"], font=("Arial", 24))
+#         icon.pack(pady=(5, 5))
+        
+#         value = ttk.Label(inner_frame, text=stat["value"], font=("Cairo", 18, "bold"), 
+#                          foreground="#0ea5e9")
+#         value.pack()
+        
+#         label = ttk.Label(inner_frame, text=stat["label"], style="CardContent.TLabel")
+#         label.pack(pady=(0, 5))
+        
+#         # جدول البيانات
+#         table_frame = ttk.Frame(frame, style="Card.TFrame")
+#         table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+#         # إضافة ظل للإطار
+#         self.add_shadow(table_frame, color="#0ea5e9", offset=5)
+        
+#         inner_table_frame = ttk.Frame(table_frame, style="Card.TFrame")
+#         inner_table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+#         # إنشاء Treeview لعرض البيانات
+#         self.tree = ttk.Treeview(inner_table_frame, columns=("name", "code", "hours", "teacher"), show="headings")
+        
+#         # تخصيص الأنماط
+#         self.tree.tag_configure("error", background="#4c1d28")
+#         self.tree.tag_configure("warning", background="#473c1b")
+        
+#         # تخصيص الأعمدة
+#         self.tree.heading("name", text="اسم المادة", anchor="center")
+#         self.tree.heading("code", text="الكود", anchor="center")
+#         self.tree.heading("hours", text="الساعات", anchor="center")
+#         self.tree.heading("teacher", text="المدرس", anchor="center")
+        
+#         self.tree.column("name", width=150, anchor="e")
+#         self.tree.column("code", width=80, anchor="center")
+#         self.tree.column("hours", width=80, anchor="center")
+#         self.tree.column("teacher", width=150, anchor="e")
+        
+#         # إضافة شريط تمرير
+#         scrollbar = ttk.Scrollbar(inner_table_frame, orient="vertical", command=self.tree.yview)
+#         self.tree.configure(yscrollcommand=scrollbar.set)
+#         scrollbar.pack(side="right", fill="y")
+#         self.tree.pack(side="left", fill="both", expand=True)
+        
+#         # إضافة بيانات تجريبية
+#         courses = [
+#             ("برمجة الحاسوب", "CS101", "3", "د. أحمد محمد", ""),
+#             ("هياكل البيانات", "CS102", "4", "د. فاطمة علي", ""),
+#             ("قواعد البيانات", "CS103", "3", "د. محمد عبدالله", ""),
+#             ("الرياضيات المتقدمة", "MATH201", "4", "", "error"),
+#             ("شبكات الحاسوب", "NET201", "3", "د. خالد علي", ""),
+#             ("أمن المعلومات", "SEC301", "2", "د. ياسر محمود", "warning"),
+#             ("الذكاء الاصطناعي", "CS301", "3", "د. سارة حسن", ""),
+#             ("هندسة البرمجيات", "CS302", "3", "د. عمر كمال", ""),
+#             ("نظم التشغيل", "CS303", "4", "د. ليلى أحمد", ""),
+#             ("التحليل العددي", "MATH202", "3", "د. خالد محمود", ""),
+#             ("التصميم المنطقي", "EE201", "3", "د. نادر سليم", ""),
+#             ("الاحصاء والاحتمالات", "MATH101", "3", "د. منى صبحي", ""),
+#             ("برمجة الألعاب", "CS401", "3", "د. باسم وليد", ""),
+#             ("إدارة المشاريع", "MGT301", "2", "د. هبة محمد", "")
+#         ]
+        
+#         for course in courses:
+#             tags = (course[4],) if course[4] else ()
+#             self.tree.insert("", "end", values=course[:4], tags=tags)
+        
+#         # أزرار التحكم
+#         btn_frame = ttk.Frame(frame, style="TFrame")
+#         btn_frame.pack(fill="x", padx=10, pady=15)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="العودة", 
+#             style="Secondary.TButton", 
+#             command=lambda: self.show_step(1)
+#         ).pack(side="right", padx=10)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="تعديل البيانات", 
+#             style="Warning.TButton", 
+#             command=self.edit_data
+#         ).pack(side="right", padx=10)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="المتابعة إلى الجدولة", 
+#             style="Primary.TButton", 
+#             command=lambda: self.show_step(3)
+#         ).pack(side="right", padx=10)
+        
+#         # إضافة تأثيرات للأزرار
+#         for btn in btn_frame.winfo_children():
+#             btn.bind("<Enter>", lambda e, b=btn: self.glow_button(b, True))
+#             btn.bind("<Leave>", lambda e, b=btn: self.glow_button(b, False))
+    
+#     def create_step3(self, frame):
+#         # محتوى الخطوة 3: إعدادات الجدولة
+#         instruction = ttk.Label(
+#             frame, 
+#             text="إعدادات الخوارزمية وإنشاء الجدول", 
+#             style="Step.TLabel", 
+#             font=("Cairo", 15)
+#         )
+#         instruction.pack(pady=20)
+        
+#         main_frame = ttk.Frame(frame, style="TFrame")
+#         main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+#         # الإعدادات المسبقة
+#         preset_frame = ttk.Frame(main_frame, style="Card.TFrame")
+#         preset_frame.pack(fill="x", padx=5, pady=5)
+        
+#         # إضافة ظل للإطار
+#         self.add_shadow(preset_frame, color="#0ea5e9", offset=5)
+        
+#         inner_preset_frame = ttk.Frame(preset_frame, style="Card.TFrame")
+#         inner_preset_frame.pack(fill="x", padx=15, pady=10)
+        
+#         ttk.Label(
+#             inner_preset_frame, 
+#             text="الإعدادات المسبقة للخوارزمية:", 
+#             style="CardContent.TLabel", 
+#             font=("Cairo", 12, "bold")
+#         ).pack(side="right", padx=10, pady=5)
+        
+#         presets = [
+#             ("متوازن", "⚖️"),
+#             ("الكفاءة", "⚡"),
+#             ("المرونة", "🔄"),
+#             ("مخصص", "⚙️")
+#         ]
+        
+#         for preset, icon in presets:
+#             btn = ttk.Button(
+#                 inner_preset_frame, 
+#                 text=f"{icon} {preset}", 
+#                 style="Secondary.TButton", 
+#                 width=10,
+#                 command=lambda p=preset: self.load_preset(p)
+#             )
+#             btn.pack(side="right", padx=5, pady=5)
+            
+#             # إضافة تأثيرات للزر
+#             btn.bind("<Enter>", lambda e, b=btn: self.glow_button(b, True))
+#             btn.bind("<Leave>", lambda e, b=btn: self.glow_button(b, False))
+        
+#         # إعدادات الخوارزمية
+#         settings_frame = ttk.Frame(main_frame, style="Card.TFrame")
+#         settings_frame.pack(fill="both", expand=True, padx=5, pady=5)
+        
+#         # إضافة ظل للإطار
+#         self.add_shadow(settings_frame, color="#0ea5e9", offset=5)
+        
+#         inner_settings_frame = ttk.Frame(settings_frame, style="Card.TFrame")
+#         inner_settings_frame.pack(fill="both", expand=True, padx=15, pady=15)
+        
+#         # إنشاء إطارات للإعدادات
+#         col1 = ttk.Frame(inner_settings_frame, style="TFrame")
+#         col1.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+        
+#         col2 = ttk.Frame(inner_settings_frame, style="TFrame")
+#         col2.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+        
+#         # قائمة الإعدادات
+#         settings = [
+#             ("تجنب تضارب الأوقات", "time-conflict", "منع تداخل المحاضرات لنفس المدرس أو القاعة"),
+#             ("توزيع الأحمال", "load-balance", "توزيع المحاضرات بالتساوي على أيام الأسبوع"),
+#             ("تفضيلات الأوقات", "time-preference", "مراعاة الأوقات المفضلة للمدرسين"),
+#             ("تجنب الفجوات الطويلة", "gap-minimization", "تقليل الانتظار بين المحاضرات"),
+#             ("ملاءمة القاعات", "room-capacity", "مطابقة حجم القاعة مع عدد الطلاب"),
+#             ("المعدات المطلوبة", "equipment-match", "توفر المعدات الضرورية في القاعات"),
+#             ("قرب القاعات", "room-proximity", "تقليل المسافة بين المحاضرات المتتالية")
+#         ]
+        
+#         for i, (name, key, desc) in enumerate(settings):
+#             parent = col1 if i < 4 else col2
+#             self.create_setting_slider(parent, name, key, desc)
+        
+#         # أزرار التحكم
+#         btn_frame = ttk.Frame(main_frame, style="TFrame")
+#         btn_frame.pack(fill="x", padx=5, pady=15)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="العودة", 
+#             style="Secondary.TButton", 
+#             command=lambda: self.show_step(2)
+#         ).pack(side="right", padx=10)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="إنشاء الجدول", 
+#             style="Primary.TButton", 
+#             command=self.generate_schedule
+#         ).pack(side="right", padx=10)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="حفظ الإعدادات", 
+#             style="Success.TButton", 
+#             command=self.save_settings
+#         ).pack(side="right", padx=10)
+        
+#         # إضافة تأثيرات للأزرار
+#         for btn in btn_frame.winfo_children():
+#             btn.bind("<Enter>", lambda e, b=btn: self.glow_button(b, True))
+#             btn.bind("<Leave>", lambda e, b=btn: self.glow_button(b, False))
+    
+#     def create_setting_slider(self, parent, name, key, desc):
+#         frame = ttk.Frame(parent, style="TFrame")
+#         frame.pack(fill="x", pady=10)
+        
+#         ttk.Label(
+#             frame, 
+#             text=name, 
+#             style="CardContent.TLabel", 
+#             font=("Cairo", 11, "bold")
+#         ).pack(anchor="w")
+        
+#         ttk.Label(
+#             frame, 
+#             text=desc, 
+#             style="CardContent.TLabel", 
+#             font=("Cairo", 10)
+#         ).pack(anchor="w")
+        
+#         slider_frame = ttk.Frame(frame, style="TFrame")
+#         slider_frame.pack(fill="x", pady=10)
+        
+#         self.algorithm_settings[key] = tk.IntVar(value=self.algorithm_settings[key])
+        
+#         value_label = ttk.Label(
+#             slider_frame, 
+#             textvariable=self.algorithm_settings[key], 
+#             width=2,
+#             style="CardContent.TLabel", 
+#             font=("Cairo", 11, "bold")
+#         )
+#         value_label.pack(side="right", padx=(10, 0))
+        
+#         slider = ttk.Scale(
+#             slider_frame, 
+#             from_=0, 
+#             to=10, 
+#             variable=self.algorithm_settings[key],
+#             command=lambda v, k=key: self.update_setting(k, v),
+#             length=200
+#         )
+#         slider.pack(side="right", padx=5, fill="x", expand=True)
+        
+#         # إضافة تأثير للمؤشر
+#         slider.bind("<Enter>", lambda e: slider.configure(style="Hover.TScale"))
+#         slider.bind("<Leave>", lambda e: slider.configure(style="TScale"))
+    
+#     def create_step4(self, frame):
+#         # محتوى الخطوة 4: الجدول النهائي
+#         instruction = ttk.Label(
+#             frame, 
+#             text="الجدول الدراسي النهائي", 
+#             style="Step.TLabel", 
+#             font=("Cairo", 15)
+#         )
+#         instruction.pack(pady=20)
+        
+#         # إحصائيات سريعة
+#         stats_frame = ttk.Frame(frame, style="TFrame")
+#         stats_frame.pack(fill="x", padx=10, pady=10)
+        
+#         stats_data = [
+#             {"value": "95%", "label": "استغلال القاعات", "icon": "📊", "color": "#0ea5e9"},
+#             {"value": "0", "label": "التضاربات الزمنية", "icon": "⚠️", "color": "#10b981"},
+#             {"value": "8.2", "label": "متوسط الحمل التدريسي", "icon": "⚖️", "color": "#f59e0b"},
+#             {"value": "12", "label": "الفجوات المتبقية", "icon": "⏳", "color": "#ef4444"}
+#         ]
+        
+#         for i, stat in enumerate(stats_data):
+#             card = ttk.Frame(stats_frame, style="Card.TFrame", width=150, height=120)
+#             card.grid(row=0, column=i, padx=10, pady=10, sticky="nsew")
+#             stats_frame.columnconfigure(i, weight=1)
+            
+#             # إضافة ظل للبطاقة
+#             self.add_shadow(card, color=stat["color"], offset=5)
+            
+#             inner_frame = ttk.Frame(card, style="Card.TFrame")
+#             inner_frame.pack(fill="both", expand=True, padx=10, pady=10)
+            
+#             icon = ttk.Label(inner_frame, text=stat["icon"], font=("Arial", 24), 
+#                             foreground=stat["color"])
+#             icon.pack(pady=(5, 5))
+            
+#             value = ttk.Label(inner_frame, text=stat["value"], font=("Cairo", 18, "bold"), 
+#                              foreground=stat["color"])
+#             value.pack()
+            
+#             label = ttk.Label(inner_frame, text=stat["label"], style="CardContent.TLabel")
+#             label.pack(pady=(0, 5))
+        
+#         # الجدول الزمني
+#         table_frame = ttk.Frame(frame, style="Card.TFrame")
+#         table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+#         # إضافة ظل للإطار
+#         self.add_shadow(table_frame, color="#0ea5e9", offset=5)
+        
+#         inner_table_frame = ttk.Frame(table_frame, style="Card.TFrame")
+#         inner_table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+#         # إنشاء جدول الجدول الزمني
+#         self.schedule_tree = ttk.Treeview(
+#             inner_table_frame, 
+#             columns=("time", "sun", "mon", "tue", "wed", "thu"), 
+#             show="headings",
+#             height=6
+#         )
+        
+#         # تخصيص الأعمدة
+#         self.schedule_tree.heading("time", text="الوقت", anchor="center")
+#         self.schedule_tree.heading("sun", text="الأحد", anchor="center")
+#         self.schedule_tree.heading("mon", text="الاثنين", anchor="center")
+#         self.schedule_tree.heading("tue", text="الثلاثاء", anchor="center")
+#         self.schedule_tree.heading("wed", text="الأربعاء", anchor="center")
+#         self.schedule_tree.heading("thu", text="الخميس", anchor="center")
+        
+#         self.schedule_tree.column("time", width=100, anchor="center")
+#         self.schedule_tree.column("sun", width=180, anchor="center")
+#         self.schedule_tree.column("mon", width=180, anchor="center")
+#         self.schedule_tree.column("tue", width=180, anchor="center")
+#         self.schedule_tree.column("wed", width=180, anchor="center")
+#         self.schedule_tree.column("thu", width=180, anchor="center")
+        
+#         # إضافة شريط تمرير
+#         scrollbar = ttk.Scrollbar(inner_table_frame, orient="vertical", command=self.schedule_tree.yview)
+#         self.schedule_tree.configure(yscrollcommand=scrollbar.set)
+#         scrollbar.pack(side="right", fill="y")
+#         self.schedule_tree.pack(side="left", fill="both", expand=True)
+        
+#         # إضافة بيانات تجريبية
+#         schedule = [
+#             ("8:00 - 9:30", "برمجة الحاسوب", "قواعد البيانات", "هياكل البيانات", "برمجة الحاسوب", "الرياضيات"),
+#             ("10:00 - 11:30", "شبكات الحاسوب", "هندسة البرمجيات", "قواعد البيانات", "الذكاء الاصطناعي", "هياكل البيانات"),
+#             ("12:00 - 1:30", "", "أمن المعلومات", "التحليل العددي", "نظم التشغيل", ""),
+#             ("2:00 - 3:30", "تصميم المواقع", "التصميم المنطقي", "الاحصاء والاحتمالات", "برمجة الألعاب", "إدارة المشاريع"),
+#             ("4:00 - 5:30", "الذكاء الاصطناعي", "شبكات الحاسوب", "أمن المعلومات", "التصميم المنطقي", "نظم التشغيل")
+#         ]
+        
+#         for row in schedule:
+#             self.schedule_tree.insert("", "end", values=row)
+        
+#         # أزرار التحكم
+#         btn_frame = ttk.Frame(frame, style="TFrame")
+#         btn_frame.pack(fill="x", padx=10, pady=15)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="العودة", 
+#             style="Secondary.TButton", 
+#             command=lambda: self.show_step(3)
+#         ).pack(side="right", padx=10)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="تصدير الجدول", 
+#             style="Warning.TButton", 
+#             command=self.export_schedule
+#         ).pack(side="right", padx=10)
+        
+#         ttk.Button(
+#             btn_frame, 
+#             text="💾 حفظ الجدول", 
+#             style="Success.TButton", 
+#             command=self.save_schedule
+#         ).pack(side="right", padx=10)
+        
+#         # إضافة تأثيرات للأزرار
+#         for btn in btn_frame.winfo_children():
+#             btn.bind("<Enter>", lambda e, b=btn: self.glow_button(b, True))
+#             btn.bind("<Leave>", lambda e, b=btn: self.glow_button(b, False))
+    
+#     def select_source(self, source_index):
+#         self.selected_source = source_index
+#         sources = ["رفع ملف", "بيانات تجريبية", "إدخال يدوي"]
+        
+#         # تحديث مظهر البطاقات
+#         for i, card in enumerate(self.source_cards):
+#             if i == source_index:
+#                 card.configure(style="SelectedCard.TFrame")
+#                 self.raise_with_shadow(card)
+#                 self.glow_card(card, True)
+#             else:
+#                 card.configure(style="Card.TFrame")
+#                 self.lower_with_shadow(card)
+#                 self.glow_card(card, False)
+        
+#         # الانتقال للخطوة التالية
+#         self.show_step(2)
+        
+#         # تحديث شريط الحالة
+#         self.status_var.set(f"تم اختيار مصدر البيانات: {sources[source_index]}")
+    
+#     def edit_data(self):
+#         messagebox.showinfo("تعديل البيانات", "سيتم فتح نافذة تعديل البيانات")
+#         self.status_var.set("جارٍ تحميل محرر البيانات...")
+    
+#     def update_setting(self, key, value):
+#         # تحديث قيمة الإعداد عند تغيير السلايدر
+#         try:
+#             self.algorithm_settings[key] = int(float(value))
+#         except ValueError:
+#             pass
+    
+#     def load_preset(self, preset):
+#         messagebox.showinfo("تحميل الإعدادات", f"تم تحميل الإعدادات المسبقة: {preset}")
+#         self.status_var.set(f"تم تحميل الإعدادات: {preset}")
+    
+#     def save_settings(self):
+#         messagebox.showinfo("حفظ الإعدادات", "تم حفظ إعدادات الخوارزمية بنجاح")
+#         self.status_var.set("تم حفظ إعدادات الخوارزمية")
+    
+#     def generate_schedule(self):
+#         # محاكاة عملية إنشاء الجدول
+#         self.status_var.set("جارٍ إنشاء الجدول الدراسي...")
+#         progress = tk.Toplevel(self.root)
+#         progress.title("إنشاء الجدول")
+#         progress.geometry("500x300")
+#         progress.resizable(False, False)
+#         progress.configure(bg="#0f172a")
+#         progress.attributes("-alpha", 0.95)  # شفافية خفيفة
+        
+#         # تخصيص أنماط النافذة
+#         ttk.Style(progress).configure("TFrame", background="#0f172a")
+#         ttk.Style(progress).configure("TLabel", background="#0f172a", foreground="#cbd5e1", font=("Cairo", 12))
+#         ttk.Style(progress).configure("TProgressbar", background="#0ea5e9", troughcolor="#1e293b")
+        
+#         # إطار النافذة
+#         main_frame = ttk.Frame(progress, style="TFrame")
+#         main_frame.pack(fill="both", expand=True, padx=20, pady=20)
+        
+#         # عنوان النافذة
+#         title = ttk.Label(main_frame, text="جارٍ إنشاء الجدول الدراسي", 
+#                          font=("Cairo", 16, "bold"), foreground="#0ea5e9")
+#         title.pack(pady=(10, 20))
+        
+#         # دائرة التقدم
+#         canvas = tk.Canvas(main_frame, width=150, height=150, bg="#0f172a", highlightthickness=0)
+#         canvas.pack(pady=10)
+        
+#         # رسم دائرة التقدم
+#         progress_circle = canvas.create_arc(10, 10, 140, 140, start=90, extent=0, 
+#                                           style="arc", width=8, outline="#0ea5e9")
+        
+#         # خطوات التقدم
+#         steps = [
+#             "جاري تحليل البيانات...",
+#             "تطبيق قيود الجدولة...",
+#             "تحسين توزيع المحاضرات...",
+#             "فحص التضاربات...",
+#             "إنشاء الجدول النهائي..."
+#         ]
+        
+#         step_var = tk.StringVar(value=steps[0])
+#         step_label = ttk.Label(main_frame, textvariable=step_var, wraplength=400)
+#         step_label.pack(pady=10)
+        
+#         # محاكاة التقدم
+#         def simulate_progress():
+#             for i, step in enumerate(steps):
+#                 step_var.set(step)
+                
+#                 # تحديث دائرة التقدم
+#                 extent = (i + 1) * (360 / len(steps))
+#                 canvas.itemconfig(progress_circle, extent=-extent)
+                
+#                 # تحديث الألوان
+#                 r = int(14 + (i * (234-14)/len(steps)))
+#                 g = int(37 + (i * (166-37)/len(steps)))
+#                 b = int(138 + (i * (234-138)/len(steps)))
+#                 color = f'#{r:02x}{g:02x}{b:02x}'
+#                 canvas.itemconfig(progress_circle, outline=color)
+                
+#                 progress.update()
+#                 time.sleep(0.8)
+            
+#             progress.destroy()
+#             self.show_step(4)
+#             self.status_var.set("تم إنشاء الجدول بنجاح")
+#             messagebox.showinfo("تم الإنشاء", "تم إنشاء الجدول الدراسي بنجاح")
+        
+#         progress.after(100, simulate_progress)
+    
+#     def export_schedule(self):
+#         file_path = filedialog.asksaveasfilename(
+#             defaultextension=".xlsx",
+#             filetypes=[("Excel files", "*.xlsx"), ("PDF files", "*.pdf"), ("All files", "*.*")]
+#         )
+#         if file_path:
+#             self.status_var.set(f"تم تصدير الجدول إلى: {file_path}")
+#             messagebox.showinfo("التصدير", f"تم تصدير الجدول بنجاح إلى:\n{file_path}")
+    
+#     def save_schedule(self):
+#         self.status_var.set("تم حفظ الجدول الدراسي")
+#         messagebox.showinfo("الحفظ", "تم حفظ الجدول الدراسي بنجاح")
+    
+#     def shake_card(self, card, shakes=8, distance=8, delay=20):
+#         # تأثير اهتزاز خفيف للبطاقة
+#         orig_x = card.winfo_x()
+#         orig_y = card.winfo_y()
+        
+#         def shake(i=0):
+#             if i < shakes:
+#                 # اتجاه الاهتزاز (أعلى، يمين، أسفل، يسار)
+#                 directions = [(0, -distance), (distance, 0), (0, distance), (-distance, 0)]
+#                 dx, dy = directions[i % 4]
+                
+#                 card.place_configure(x=orig_x + dx, y=orig_y + dy)
+#                 card.after(delay, lambda: shake(i+1))
+#             else:
+#                 card.place_configure(x=orig_x, y=orig_y)
+        
+#         shake()
+    
+#     def get_step_name(self, step):
+#         names = {
+#             1: "تحديد مصدر البيانات",
+#             2: "معاينة البيانات",
+#             3: "إعدادات الجدولة",
+#             4: "الجدول النهائي"
+#         }
+#         return names.get(step, "")
+
+#     def set_status(self, msg, status_type="info"):
+#         self.status_var.set(msg)
+#         color = {
+#             "info": "#0ea5e9",
+#             "success": "#10b981",
+#             "warning": "#f59e0b",
+#             "error": "#ef4444"
+#         }.get(status_type, "#0ea5e9")
+#         self.status_bar.configure(foreground=color)
+
+# if __name__ == "__main__":
+#     root = tk.Tk()
+    
+#     # إضافة أنماط إضافية
+#     style = ttk.Style()
+    
+#     # تخصيص الأنماط
+#     style.configure("TFrame", background="#0f172a")
+#     style.configure("Header.TFrame", background="linear-gradient(90deg, #1e3a8a, #0ea5e9)")
+#     style.configure("Title.TLabel", background="transparent", foreground="white", 
+#                   font=("Cairo", 24, "bold"))
+#     style.configure("Subtitle.TLabel", background="transparent", foreground="#cbd5e1", 
+#                   font=("Cairo", 14))
+#     style.configure("Step.TLabel", background="transparent", foreground="#0ea5e9", 
+#                   font=("Cairo", 14, "bold"))
+#     style.configure("Card.TFrame", background="#1e293b", relief="flat", borderwidth=0)
+#     style.configure("CardTitle.TLabel", background="transparent", foreground="#0ea5e9", 
+#                   font=("Cairo", 14, "bold"))
+#     style.configure("CardIcon.TLabel", background="transparent", foreground="#0ea5e9", 
+#                   font=("Cairo", 22))
+#     style.configure("CardContent.TLabel", background="transparent", foreground="#cbd5e1", 
+#                   font=("Cairo", 12))
+#     style.configure("Primary.TButton", background="linear-gradient(90deg, #1e3a8a, #0ea5e9)", 
+#                   foreground="white", font=("Cairo", 14, "bold"), borderwidth=0, 
+#                   padding=10)
+#     style.map("Primary.TButton", background=[("active", "linear-gradient(90deg, #1e40af, #0284c7)")])
+#     style.configure("Secondary.TButton", background="#334155", foreground="white", 
+#                   font=("Cairo", 14, "bold"), borderwidth=0, padding=10)
+#     style.map("Secondary.TButton", background=[("active", "#475569")])
+#     style.configure("Success.TButton", background="linear-gradient(90deg, #047857, #10b981)", 
+#                   foreground="white", font=("Cairo", 14, "bold"), borderwidth=0, 
+#                   padding=10)
+#     style.map("Success.TButton", background=[("active", "linear-gradient(90deg, #065f46, #059669)")])
+#     style.configure("Warning.TButton", background="linear-gradient(90deg, #b45309, #f59e0b)", 
+#                   foreground="white", font=("Cairo", 14, "bold"), borderwidth=0, 
+#                   padding=10)
+#     style.map("Warning.TButton", background=[("active", "linear-gradient(90deg, #9a3412, #eab308)")])
+#     style.configure("SelectedCard.TFrame", background="#334155", relief="flat", borderwidth=0)
+#     style.configure("SidebarStep.TButton", background="#1e293b", foreground="#cbd5e1", 
+#                   font=("Cairo", 14, "bold"), borderwidth=0, anchor="w", padding=12)
+#     style.map("SidebarStep.TButton", background=[("active", "#334155")], 
+#              foreground=[("active", "white")])
+#     style.configure("SidebarStepActive.TButton", background="#0ea5e9", foreground="white", 
+#                   font=("Cairo", 15, "bold"), borderwidth=0, anchor="w", padding=14)
+#     style.configure("SidebarStepDone.TButton", background="#10b981", foreground="white", 
+#                   font=("Cairo", 14), borderwidth=0, anchor="w", padding=12)
+#     style.configure("PulseSidebarStep.TButton", background="#0284c7", foreground="white", 
+#                   font=("Cairo", 15, "bold"), borderwidth=0, anchor="w", padding=14)
+#     style.configure("StatusBar.TLabel", background="#1e293b", foreground="#0ea5e9", 
+#                   font=("Cairo", 11), relief="sunken")
+    
+#     app = UniversityScheduler(root)
+#     root.mainloop()

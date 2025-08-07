@@ -1,0 +1,73 @@
+{
+  "rooms": [
+    {"id": "R1", "name": "القاعة الكبرى", "type": "نظرية", "capacity": 60, "facilities": ["projector"]},
+    {"id": "R2", "name": "المختبر الاول", "type": "عملي", "capacity": 30, "facilities": ["projector"]},
+    {"id": "R3", "name": "المختبر الثاني", "type": "عملي", "capacity": 30, "facilities": ["projector"]}
+  ],
+  "instructors": [
+    {
+      "id": "I1", 
+      "name": "د. أحمد", 
+      "expertise": ["نظرية"],
+      "preferred_days": [1, 2],
+      "max_teaching_hours": 20
+    },
+    {
+      "id": "I2", 
+      "name": "د. سارة", 
+      "expertise": ["عملي"],
+      "preferred_days": [1, 2, 3, 4, 5],
+      "max_teaching_hours": 25
+    },
+    {
+      "id": "I3", 
+      "name": "د. ماريا", 
+      "expertise": ["عملي"],
+      "preferred_days": [1, 2, 3, 4, 5],
+      "max_teaching_hours": 25
+    }
+],
+  "groups": [
+    {
+      "id": "G1", 
+      "major": "علوم الحاسب", 
+      "student_count": 60,
+      "enrolled_courses": ["C1", "C2", "C3"],
+      "level": 1
+    }
+  ],
+  "courses": [
+    {
+      "id": "C1",
+      "name": "الرياضيات المتقدمة",
+      "course_type": "نظرية",
+      "duration": 120,
+      "instructor_id": "I1",
+      "group_id": "G1",
+      "required_facilities": ["projector"],
+      "can_merge": false
+    },
+    {
+      "id": "C2",
+      "name": "الفيزياء الكمومية",
+      "course_type": "عملي",
+      "duration": 120,
+      "instructor_id": "I2",
+      "group_id": "G1",
+      "required_facilities": ["projector"]
+    },
+    {
+      "id": "C3",
+      "name": "ميكانيكا الكم",
+      "course_type": "عملي",
+      "duration": 120,
+      "instructor_id": "I3",
+      "group_id": "G1",
+      "required_facilities": ["projector"]
+    }
+  ],
+  "working_days": [0],
+  "daily_start_time": "08:00",
+  "daily_end_time": "14:00",
+  "min_break_between_classes": 0
+}
